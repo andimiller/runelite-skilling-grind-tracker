@@ -1,5 +1,7 @@
 package net.andimiller.runelite.skilling.grind.tracker;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.google.inject.Provides;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
@@ -44,6 +46,15 @@ public class GrindTrackerPlugin extends Plugin
 	@Inject
 	private ItemManager itemManager;
 
+	@Inject
+    private ConfigManager configManager;
+
+	@Inject
+	private Gson gson;
+
+	final static String CONFIG_GROUP = "skilling-grind-tracker";
+	final static String COUNTERS_KEY = "counters";
+
 	private GoalsOverlay overlay;
 
 	// Plugin state for keeping track of the items we've seen
@@ -59,6 +70,13 @@ public class GrindTrackerPlugin extends Plugin
 
 
 	void loadFromConfig() {
+		if (counters == null) {
+			try {
+				counters = gson.fromJson(configManager.getConfiguration(CONFIG_GROUP, COUNTERS_KEY), new TypeToken<HashMap<Integer, HashMap<Integer, Integer>>>() {}.getType() );
+			} catch (Exception e) {
+				log.warn("Unable to deserialize a cached counter", e);
+			}
+		}
 		if (counters == null) {
 			counters = new HashMap<>();
 		}
@@ -92,11 +110,15 @@ public class GrindTrackerPlugin extends Plugin
 		loadFromConfig();
 	}
 
+	protected void saveCounters() {
+		configManager.setConfiguration(CONFIG_GROUP, COUNTERS_KEY, gson.toJson(counters));
+	}
+
 	@Override
 	protected void shutDown() throws Exception
 	{
+		saveCounters();
 		overlayManager.remove(overlay);
-		log.info("Goals plugin stopped!");
 	}
 
 	@Subscribe
@@ -114,6 +136,7 @@ public class GrindTrackerPlugin extends Plugin
 			counters.putIfAbsent(itemId, new HashMap<>());
 			counters.get(itemId).put(container.getId(), count);
 		}
+		saveCounters();
 	}
 
 	@Provides
