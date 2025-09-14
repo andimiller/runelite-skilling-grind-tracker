@@ -9,6 +9,7 @@ A plugin for helping you keep track of skilling grinds.
 * Lets you keep track of single items, or chained items
 * Caches bank counts and more
 * Updates live
+* Supports deposit boxes
 
 ## Colour Meanings
 
