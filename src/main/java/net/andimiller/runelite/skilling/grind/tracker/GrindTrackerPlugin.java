@@ -159,7 +159,7 @@ public class GrindTrackerPlugin extends Plugin {
             return;
         }
 
-        if (menuOptionClicked.getMenuOption().startsWith("Deposit")) {
+        if (menuOptionClicked.getMenuOption().startsWith("Deposit") && !depositing) {
             depositing = true;
             preDepositCounters = Optional.of(
                     gson.fromJson(gson.toJson(counters), new TypeToken<HashMap<Integer, HashMap<Integer, Integer>>>() {
