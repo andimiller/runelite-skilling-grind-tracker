@@ -72,9 +72,9 @@ public class GrindTrackerPlugin extends Plugin
 			names = new HashMap<>();
 		}
 
-		//if (overlay != null) {
-		//	overlay.updateGoals(goals);
-		//}
+		if (overlay != null) {
+			overlay.updateGoals(goals);
+		}
 	}
 
 	@Override
