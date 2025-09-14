@@ -49,6 +49,8 @@ public class GoalsOverlay extends OverlayPanel {
 
         int maxWidth = 0;
 
+        int staleCount = 0;
+
         for (Goal goal : goals) {
             Map<Integer, Integer> owned = goal.getTypes().stream().map(i ->
                     Map.entry(
@@ -67,8 +69,13 @@ public class GoalsOverlay extends OverlayPanel {
 
                 Integer remaining = Math.max(r - o, 0);
 
+                boolean stale = counters.getOrDefault(itemId, new HashMap<>()).size() != 2;
+
                 Color colour;
-                if (remaining == 0) {
+                if (stale) {
+                   staleCount += 1;
+                   colour = Color.RED;
+                } else if (remaining == 0) {
                     colour = Color.GREEN;
                 } else if (o == 0) {
                     colour = Color.LIGHT_GRAY;
@@ -77,9 +84,7 @@ public class GoalsOverlay extends OverlayPanel {
                 }
 
                 int stringWidth = graphics.getFontMetrics().stringWidth(String.format("%s  %d / %d", name, o, r));
-                if (stringWidth > maxWidth) {
-                    maxWidth = stringWidth;
-                }
+                maxWidth = Integer.max(stringWidth, maxWidth);
 
                 panelComponent.getChildren().add(
                         LineComponent.builder()
@@ -90,6 +95,13 @@ public class GoalsOverlay extends OverlayPanel {
                                 .build()
                 );
             }
+        }
+        if (staleCount > 0) {
+            String STALE_WARNING= "Stale items in red require you to check your bank to update counts";
+            maxWidth = Integer.max(maxWidth, graphics.getFontMetrics().stringWidth(STALE_WARNING));
+            panelComponent.getChildren().add(
+                    TitleComponent.builder().text(STALE_WARNING).build()
+            );
         }
 
         panelComponent.setPreferredSize(

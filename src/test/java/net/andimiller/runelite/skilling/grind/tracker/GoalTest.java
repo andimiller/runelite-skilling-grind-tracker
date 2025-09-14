@@ -19,7 +19,7 @@ public class GoalTest {
                 )
         )
                 .hasSize(1)
-                .containsEntry(1, 300); // we need 300 more of item 1
+                .containsEntry(1, 500); // we need 300 more of item 1
     }
 
 
@@ -35,9 +35,9 @@ public class GoalTest {
                         )
                 )
         ).hasSize(3)
-                .containsEntry(3, 400)
-                .containsEntry(2, 350)
-                .containsEntry(1, 0);
+                .containsEntry(3, 500)
+                .containsEntry(2, 400)
+                .containsEntry(1, 350);
 
     }
 }

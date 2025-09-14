@@ -7,7 +7,7 @@ public class ManualTest
 {
 	public static void main(String[] args) throws Exception
 	{
-		ExternalPluginManager.loadBuiltin(GrindTrackerPlugin.class);
+		ExternalPluginManager.loadBuiltin(ItemGrindTrackerPlugin.class);
 		RuneLite.main(args);
 	}
 }
